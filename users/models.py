@@ -31,16 +31,16 @@ class Pay(models.Model):
         (CASH_ACCOUNT, 'перевод на счет')
     ]
     user = models.ForeignKey(User, related_name='pays', on_delete=models.CASCADE)
-    lesson = models.ForeignKey(Lessons, related_name='pays', on_delete=models.CASCADE, null=True, blank=True)
-    course = models.ForeignKey(Courses, related_name='courses', on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lessons, related_name='payments', on_delete=models.CASCADE, null=True, blank=True)
+    course = models.ForeignKey(Courses, related_name='payments', on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(verbose_name='дата и время оплаты', auto_now_add=True)
     total_pay = models.PositiveIntegerField(verbose_name='сумма оплаты')
     choose_pay = models.CharField(max_length=20, choices=TYPE_PAY, verbose_name='вид оплаты')
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        ordering = ['-created_at']
+        verbose_name = 'Оплата'
+        verbose_name_plural = 'Оплаты'
+
 
     def __str__(self):
         return f'Платеж {self.id} - {self.user} - {self.total_pay} руб.'

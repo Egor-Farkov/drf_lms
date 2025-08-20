@@ -9,4 +9,4 @@ class PaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pay
-        fields = ['id', 'user_email', 'course_name', 'lesson_name', 'create_at', 'total_pay', 'choose_pay']
+        fields = ['id', 'user_email', 'course_name', 'lesson_name', 'created_at', 'total_pay', 'choose_pay']

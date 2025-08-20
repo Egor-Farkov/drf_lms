@@ -7,6 +7,9 @@ class Courses(models.Model):
     picture = models.ImageField(upload_to='images/', verbose_name='превью', null=True, blank=True)
     description = models.TextField(verbose_name='описание', null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Lessons(models.Model):
     name = models.CharField(max_length=100, verbose_name='название курса')
@@ -14,5 +17,9 @@ class Lessons(models.Model):
     description = models.TextField(verbose_name='описание', null=True, blank=True)
     url_video = models.TextField(verbose_name='ссыдка на видео', null=True, blank=True)
     course = models.ForeignKey(Courses, related_name='lessons', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
 
 

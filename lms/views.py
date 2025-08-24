@@ -1,51 +1,63 @@
-from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework.generics import get_object_or_404, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView, \
-    ListAPIView
-from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, filters
+
 
 from lms.models import Courses, Lessons
 from lms.serializers import CoursesSerializer, LessonsSerializer
+from users.permissions import ModeratorPermissionsAll, IsOwner
 
 
 # Create your views here.
-class CoursesViewSet(viewsets.ViewSet):
-    """
-    Простой ViewSet-класс для вывода списка курсов и информации по одному объекту
-    """
+class CoursesViewSet(viewsets.ModelViewSet):
+    """Контролер отображения фильтрации и сортировки"""
 
-    def list(self, request):
-        queryset = Courses.objects.all()
-        serializer = CoursesSerializer(queryset, many=True)
-        return Response(serializer.data)
+    queryset = Courses.objects.all()
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    ordering_fields = ["name"]
+    ordering = ["-name"]
 
-    def retrieve(self, request, pk=None):
-        queryset = Courses.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = CoursesSerializer(user)
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return CoursesSerializer
 
 
-class LessonsListAPIView(ListAPIView):
+    def perform_create(self, serializer):
+        course = serializer.save()
+        course.owner = self.request.user
+        course.save()
+
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = (~ModeratorPermissionsAll,)
+        elif self.action in ['update', 'retrieve']:
+            self.permission_classes = (ModeratorPermissionsAll | IsOwner)
+        elif self.action == 'destroy':
+            self.permission_classes = (~ModeratorPermissionsAll, IsOwner)
+        return super().get_permissions()
+
+class LessonsViewSet(viewsets.ModelViewSet):
+    """Контролер отображения фильтрации и сортировки"""
+
     queryset = Lessons.objects.all()
-    serializer_class = LessonsSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    ordering_fields = ["name"]
+    ordering = ["-name"]
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return LessonsSerializer
 
 
-class LessonsRetrieveAPIView(RetrieveAPIView):
-    queryset = Lessons.objects.all()
-    serializer_class = LessonsSerializer
+    def perform_create(self, serializer):
+        lesson = serializer.save()
+        lesson.owner = self.request.user
+        lesson.save()
 
-
-class LessonsCreateAPIView(CreateAPIView):
-    queryset = Lessons.objects.all()
-    serializer_class = LessonsSerializer
-
-
-class LessonsUpdateAPIView(UpdateAPIView):
-    queryset = Lessons.objects.all()
-    serializer_class = LessonsSerializer
-
-
-class LessonsDestroyAPIView(DestroyAPIView):
-    queryset = Lessons.objects.all()
-    serializer_class = LessonsSerializer
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = (~ModeratorPermissionsAll,)
+        elif self.action in ['update', 'retrieve']:
+            self.permission_classes = (ModeratorPermissionsAll | IsOwner)
+        elif self.action == 'destroy':
+            self.permission_classes = (~ModeratorPermissionsAll, IsOwner)
+        return super().get_permissions()

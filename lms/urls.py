@@ -1,9 +1,12 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
+from lms.apps import LmsConfig
 from lms.views import CoursesViewSet, LessonsListAPIView, LessonsRetrieveAPIView, LessonsCreateAPIView, \
     LessonsUpdateAPIView, LessonsDestroyAPIView
 
+
+app_name = LmsConfig.name
 # Описание маршрутизации для ViewSet
 router = DefaultRouter()
 router.register(r'', CoursesViewSet, basename='courses')

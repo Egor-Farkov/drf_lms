@@ -25,14 +25,21 @@ class CoursesViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            self.permission_classes = (~ModeratorPermissionsAll,)
+            self.permission_classes = (IsAuthenticated, ~ModeratorPermissionsAll,)
         elif self.action in ['update', 'partial_update', 'retrieve']:
             self.permission_classes = (IsAuthenticated, ModeratorPermissionsAll | IsOwner,)
         elif self.action == 'destroy':
             self.permission_classes = (IsAuthenticated, IsOwner,)
-        elif self.action in ['update', 'destroy']:
-            self.permission_classes = (ModeratorPermissionsAll,)
         return super().get_permissions()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
+        if user.groups.filter(name='moders').exists():
+            return qs
+
+        return qs.filter(owner=user)
+
 
 class LessonsViewSet(viewsets.ModelViewSet):
     """Контролер отображения фильтрации и сортировки"""
@@ -52,11 +59,17 @@ class LessonsViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            self.permission_classes = (~ModeratorPermissionsAll,)
+            self.permission_classes = (IsAuthenticated, ~ModeratorPermissionsAll,)
         elif self.action in ['update', 'partial_update', 'retrieve']:
             self.permission_classes = (IsAuthenticated, ModeratorPermissionsAll | IsOwner,)
         elif self.action == 'destroy':
             self.permission_classes = (IsAuthenticated, IsOwner,)
-        elif self.action in ['update', 'destroy']:
-            self.permission_classes = (ModeratorPermissionsAll,)
         return super().get_permissions()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
+        if user.groups.filter(name='moders').exists():
+            return qs
+
+        return qs.filter(owner=user)

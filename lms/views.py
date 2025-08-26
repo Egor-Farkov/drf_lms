@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
-
+from rest_framework.permissions import IsAuthenticated
 
 from lms.models import Courses, Lessons
 from lms.serializers import CoursesSerializer, LessonsSerializer
@@ -15,10 +15,7 @@ class CoursesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     ordering_fields = ["name"]
     ordering = ["-name"]
-
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return CoursesSerializer
+    serializer_class = CoursesSerializer
 
 
     def perform_create(self, serializer):
@@ -29,10 +26,12 @@ class CoursesViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             self.permission_classes = (~ModeratorPermissionsAll,)
-        elif self.action in ['update', 'retrieve']:
-            self.permission_classes = (ModeratorPermissionsAll | IsOwner)
+        elif self.action in ['update', 'partial_update', 'retrieve']:
+            self.permission_classes = (IsAuthenticated, ModeratorPermissionsAll | IsOwner,)
         elif self.action == 'destroy':
-            self.permission_classes = (~ModeratorPermissionsAll, IsOwner)
+            self.permission_classes = (IsAuthenticated, IsOwner,)
+        elif self.action in ['update', 'destroy']:
+            self.permission_classes = (ModeratorPermissionsAll,)
         return super().get_permissions()
 
 class LessonsViewSet(viewsets.ModelViewSet):
@@ -42,10 +41,8 @@ class LessonsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     ordering_fields = ["name"]
     ordering = ["-name"]
+    serializer_class = LessonsSerializer
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return LessonsSerializer
 
 
     def perform_create(self, serializer):
@@ -56,8 +53,10 @@ class LessonsViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             self.permission_classes = (~ModeratorPermissionsAll,)
-        elif self.action in ['update', 'retrieve']:
-            self.permission_classes = (ModeratorPermissionsAll | IsOwner)
+        elif self.action in ['update', 'partial_update', 'retrieve']:
+            self.permission_classes = (IsAuthenticated, ModeratorPermissionsAll | IsOwner,)
         elif self.action == 'destroy':
-            self.permission_classes = (~ModeratorPermissionsAll, IsOwner)
+            self.permission_classes = (IsAuthenticated, IsOwner,)
+        elif self.action in ['update', 'destroy']:
+            self.permission_classes = (ModeratorPermissionsAll,)
         return super().get_permissions()

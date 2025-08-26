@@ -33,7 +33,6 @@ class PayViewSet(viewsets.ReadOnlyModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    # filterset_class = PayFilter
     ordering_fields = ['email']
     ordering = ['-email']
 

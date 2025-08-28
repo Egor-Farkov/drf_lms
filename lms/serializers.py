@@ -7,7 +7,7 @@ from lms.models import Courses, Lessons
 class LessonsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lessons
-        fields = ['id', 'name', 'picture', 'description', 'url_video']
+        fields = ['id', 'name', 'picture', 'description', 'url_video', 'course']
 
 
 class CoursesSerializer(serializers.ModelSerializer):

@@ -2,9 +2,11 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from lms.models import Courses, Lessons
+from lms.validators import validate_forbidden_word
 
 
 class LessonsSerializer(serializers.ModelSerializer):
+    url_video = serializers.CharField(validators=[validate_forbidden_word])
     class Meta:
         model = Lessons
         fields = ['id', 'name', 'picture', 'description', 'url_video', 'course']

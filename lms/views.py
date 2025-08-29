@@ -3,6 +3,7 @@ from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 
 from lms.models import Courses, Lessons
+from lms.paginations import CustomPagination
 from lms.serializers import CoursesSerializer, LessonsSerializer
 from users.permissions import ModeratorPermissionsAll, IsOwner
 
@@ -16,6 +17,7 @@ class CoursesViewSet(viewsets.ModelViewSet):
     ordering_fields = ["name"]
     ordering = ["-name"]
     serializer_class = CoursesSerializer
+    pagination_class = CustomPagination
 
 
     def perform_create(self, serializer):
@@ -49,6 +51,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
     ordering_fields = ["name"]
     ordering = ["-name"]
     serializer_class = LessonsSerializer
+    pagination_class = CustomPagination
 
 
 

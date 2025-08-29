@@ -7,28 +7,46 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lms', '0001_initial'),
-        ('users', '0002_pay'),
+        ("lms", "0001_initial"),
+        ("users", "0002_pay"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='pay',
-            options={'ordering': ['-created_at'], 'verbose_name': 'Оплата', 'verbose_name_plural': 'Оплаты'},
+            name="pay",
+            options={
+                "ordering": ["-created_at"],
+                "verbose_name": "Оплата",
+                "verbose_name_plural": "Оплаты",
+            },
         ),
         migrations.AlterField(
-            model_name='pay',
-            name='course',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='payments', to='lms.courses'),
+            model_name="pay",
+            name="course",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="payments",
+                to="lms.courses",
+            ),
         ),
         migrations.AlterField(
-            model_name='pay',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='дата и время оплаты'),
+            model_name="pay",
+            name="created_at",
+            field=models.DateTimeField(
+                auto_now_add=True, verbose_name="дата и время оплаты"
+            ),
         ),
         migrations.AlterField(
-            model_name='pay',
-            name='lesson',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='payments', to='lms.lessons'),
+            model_name="pay",
+            name="lesson",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="payments",
+                to="lms.lessons",
+            ),
         ),
     ]

@@ -5,6 +5,6 @@ from lms.views import CoursesViewSet, LessonsViewSet
 
 app_name = LmsConfig.name
 router = DefaultRouter()
-router.register(r'courses', CoursesViewSet, basename='courses')
-router.register(r'lessons', LessonsViewSet, basename='lessons')
+router.register(r"courses", CoursesViewSet, basename="courses")
+router.register(r"lessons", LessonsViewSet, basename="lessons")
 urlpatterns = router.urls

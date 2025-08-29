@@ -8,21 +8,63 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lms', '0001_initial'),
-        ('users', '0001_initial'),
+        ("lms", "0001_initial"),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Pay',
+            name="Pay",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateField(auto_now=True, verbose_name='дата оплаты')),
-                ('total_pay', models.PositiveIntegerField(verbose_name='сумма оплаты')),
-                ('choose_pay', models.CharField(choices=[('cash', 'наличные'), ('cash_account', 'перевод на счет')], max_length=20, verbose_name='вид оплаты')),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='courses', to='lms.courses')),
-                ('lesson', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lessons', to='lms.lessons')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pays', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateField(auto_now=True, verbose_name="дата оплаты"),
+                ),
+                ("total_pay", models.PositiveIntegerField(verbose_name="сумма оплаты")),
+                (
+                    "choose_pay",
+                    models.CharField(
+                        choices=[
+                            ("cash", "наличные"),
+                            ("cash_account", "перевод на счет"),
+                        ],
+                        max_length=20,
+                        verbose_name="вид оплаты",
+                    ),
+                ),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="courses",
+                        to="lms.courses",
+                    ),
+                ),
+                (
+                    "lesson",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="lessons",
+                        to="lms.lessons",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="pays",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

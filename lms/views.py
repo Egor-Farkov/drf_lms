@@ -1,11 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters
+from rest_framework import filters, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from lms.models import Courses, Lessons
 from lms.paginations import CustomPagination
 from lms.serializers import CoursesSerializer, LessonsSerializer
-from users.permissions import ModeratorPermissionsAll, IsOwner
+from users.permissions import IsOwner, ModeratorPermissionsAll
 
 
 # Create your views here.
@@ -19,25 +19,33 @@ class CoursesViewSet(viewsets.ModelViewSet):
     serializer_class = CoursesSerializer
     pagination_class = CustomPagination
 
-
     def perform_create(self, serializer):
         course = serializer.save()
         course.owner = self.request.user
         course.save()
 
     def get_permissions(self):
-        if self.action == 'create':
-            self.permission_classes = (IsAuthenticated, ~ModeratorPermissionsAll,)
-        elif self.action in ['update', 'partial_update', 'retrieve']:
-            self.permission_classes = (IsAuthenticated, ModeratorPermissionsAll | IsOwner,)
-        elif self.action == 'destroy':
-            self.permission_classes = (IsAuthenticated, IsOwner,)
+        if self.action == "create":
+            self.permission_classes = (
+                IsAuthenticated,
+                ~ModeratorPermissionsAll,
+            )
+        elif self.action in ["update", "partial_update", "retrieve"]:
+            self.permission_classes = (
+                IsAuthenticated,
+                ModeratorPermissionsAll | IsOwner,
+            )
+        elif self.action == "destroy":
+            self.permission_classes = (
+                IsAuthenticated,
+                IsOwner,
+            )
         return super().get_permissions()
 
     def get_queryset(self):
         qs = super().get_queryset()
         user = self.request.user
-        if user.groups.filter(name='moders').exists():
+        if user.groups.filter(name="moders").exists():
             return qs
 
         return qs.filter(owner=user)
@@ -53,26 +61,33 @@ class LessonsViewSet(viewsets.ModelViewSet):
     serializer_class = LessonsSerializer
     pagination_class = CustomPagination
 
-
-
     def perform_create(self, serializer):
         lesson = serializer.save()
         lesson.owner = self.request.user
         lesson.save()
 
     def get_permissions(self):
-        if self.action == 'create':
-            self.permission_classes = (IsAuthenticated, ~ModeratorPermissionsAll,)
-        elif self.action in ['update', 'partial_update', 'retrieve']:
-            self.permission_classes = (IsAuthenticated, ModeratorPermissionsAll | IsOwner,)
-        elif self.action == 'destroy':
-            self.permission_classes = (IsAuthenticated, IsOwner,)
+        if self.action == "create":
+            self.permission_classes = (
+                IsAuthenticated,
+                ~ModeratorPermissionsAll,
+            )
+        elif self.action in ["update", "partial_update", "retrieve"]:
+            self.permission_classes = (
+                IsAuthenticated,
+                ModeratorPermissionsAll | IsOwner,
+            )
+        elif self.action == "destroy":
+            self.permission_classes = (
+                IsAuthenticated,
+                IsOwner,
+            )
         return super().get_permissions()
 
     def get_queryset(self):
         qs = super().get_queryset()
         user = self.request.user
-        if user.groups.filter(name='moders').exists():
+        if user.groups.filter(name="moders").exists():
             return qs
 
         return qs.filter(owner=user)

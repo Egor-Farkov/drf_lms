@@ -8,28 +8,83 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Courses',
+            name="Courses",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='название курса')),
-                ('picture', models.ImageField(blank=True, null=True, upload_to='images/', verbose_name='превью')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='описание')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=100, verbose_name="название курса"),
+                ),
+                (
+                    "picture",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="images/",
+                        verbose_name="превью",
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, null=True, verbose_name="описание"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Lessons',
+            name="Lessons",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='название курса')),
-                ('picture', models.ImageField(blank=True, null=True, upload_to='images/', verbose_name='превью')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='описание')),
-                ('url_video', models.TextField(blank=True, null=True, verbose_name='ссыдка на видео')),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lessons', to='lms.courses')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=100, verbose_name="название курса"),
+                ),
+                (
+                    "picture",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="images/",
+                        verbose_name="превью",
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, null=True, verbose_name="описание"),
+                ),
+                (
+                    "url_video",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="ссыдка на видео"
+                    ),
+                ),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="lessons",
+                        to="lms.courses",
+                    ),
+                ),
             ],
         ),
     ]

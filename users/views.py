@@ -11,6 +11,7 @@ from users.models import Pay, SubscribeCourse, User
 from users.serializers import (PaySerializer, UserCreateSerializer,
                                UserDetailViewSerializer, UserViewSerializer)
 from users.services import create_stripe_price_amount, create_stripe_session
+from users.tasks import send_subscribe_user_course
 
 
 class UserSubscribe(APIView):
@@ -32,6 +33,11 @@ class UserSubscribe(APIView):
         # Если подписки у пользователя на этот курс нет - создаем ее
         else:
             SubscribeCourse.objects.create(user=user, course=course_item)
+
+            send_subscribe_user_course(theme='обратная связь',
+                                       email=user.email,
+                                       message='спасибо за подписку на курс').delay()
+
             message = "подписка добавлена"
         # Возвращаем ответ в API
         return Response({"message": message})
